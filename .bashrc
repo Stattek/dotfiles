@@ -92,6 +92,7 @@ alias la='ls -A'
 alias l='ls -CF'
 
 # --- MY ALIASES ---
+
 # alias for changing directories with sk
 # REQUIRES `sk` TO BE INSTALLED
 alias cdfzf='cd && cd $(sk | sed "s|\(.*\)/.*|\1|")'
