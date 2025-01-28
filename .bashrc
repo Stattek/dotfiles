@@ -101,8 +101,8 @@ alias cdfzf='cd && cd $(sk | sed "s|\(.*\)/.*|\1|")'
 alias cdsk='cdfzf'
 
 # nord aliases
-alias nordvpn-disconnect='nordvpn set killswitch off; nordvpn disconnect'
-alias nordvpn-connect='nordvpn set killswitch on; nordvpn connect chicago'
+alias nordvpn-disconnect='nordvpn set killswitch off && nordvpn disconnect'
+alias nordvpn-connect='nordvpn set killswitch on && nordvpn connect chicago'
 
 # trims the ending of a video and saves the output
 function trim-video-end() {
