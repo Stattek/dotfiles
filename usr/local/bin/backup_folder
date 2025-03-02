@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 
 # do test by default
-TEST_PULL=true
+TEST_PUSH=true
 
 while getopts 'pt' OPTION; do
 
     case "$OPTION" in
     p)
-        TEST_PULL=false
+        TEST_PUSH=false
         shift 1
         ;;
 
     t)
-        TEST_PULL=true
+        TEST_PUSH=true
         shift 1
         ;;
 
@@ -20,8 +20,8 @@ while getopts 'pt' OPTION; do
         echo "Usage: $(basename $0) <src_directory> <dest_directory>"
         echo "    Securely backs up a source directory to a destination directory, doing a test by default (does not change files unless specifically given the flag to do so)."
         echo "FLAGS:"
-        echo "    [-p] # Perform pull (CHANGES FILES)"
-        echo "    [-t] # (BY DEFAULT) Test pull (does not change any files)"
+        echo "    [-p] # Perform push (CHANGES FILES)"
+        echo "    [-t] # (BY DEFAULT) Test push (does not change any files)"
         exit 1
         ;;
     esac
@@ -31,8 +31,8 @@ if [ "$#" -lt 2 ]; then
     echo "Usage: $(basename $0) <src_directory> <dest_directory>"
     echo "    Securely backs up a source directory to a destination directory, doing a test by default (does not change files unless specifically given the flag to do so)."
     echo "FLAGS:"
-    echo "    [-p] # Perform pull (CHANGES FILES)"
-    echo "    [-t] # (BY DEFAULT) Test pull (does not change any files)"
+    echo "    [-p] # Perform push (CHANGES FILES)"
+    echo "    [-t] # (BY DEFAULT) Test push (does not change any files)"
     exit 1
 fi
 
@@ -49,9 +49,9 @@ if [ ! -d "$DEST_DIRECTORY" ]; then
     exit 1
 fi
 
-if $TEST_PULL; then
+if $TEST_PUSH; then
     echo "---Performing test from $SRC_DIRECTORY directory to $DEST_DIRECTORY---"
-    # perform test pull
+    # perform test push
     rsync -raz --dry-run --update --progress "$SRC_DIRECTORY" "$DEST_DIRECTORY"
 else
     # prompt the user if they are sure that they want to do this action
@@ -63,9 +63,9 @@ else
     echo
     echo
 
-    # if we got a yes reply, then do the pull/test
+    # if we got a yes reply, then do the push
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        echo "---Performing pull---"
+        echo "---Performing push---"
         # syncs files to their newest versions if they exist
         # and creates files if they did not exist before
         # NOTE: --update prevents rsync from deleting files that were deleted, so things can only be added
