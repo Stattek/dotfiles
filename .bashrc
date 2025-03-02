@@ -95,10 +95,11 @@ alias l='ls -CF'
 
 # alias for changing directories with sk
 # REQUIRES `sk` TO BE INSTALLED
-alias cdfzf='cd && cd $(sk | sed "s|\(.*\)/.*|\1|")'
+alias cdfzf='cd $(fzf | sed "s|\(.*\)/.*|\1|")'
 
 # alias for cdfzf which is faster to type
-alias cdsk='cdfzf'
+# REQUIRE `fzf` TO BE INSTALLED
+alias cdsk='cd $(sk | sed "s|\(.*\)/.*|\1|")'
 
 # nord aliases
 alias nordvpn-disconnect='nordvpn set killswitch off && nordvpn disconnect'
@@ -108,7 +109,7 @@ alias nordvpn-connect='nordvpn set killswitch on && nordvpn connect chicago'
 function trim-video-end() {
     if [ "$#" -ne "3" ]; then
         # improper number of arguments
-        echo "Usage: trim-watermark <input_video> <output_video> <num_seconds>"
+        echo "Usage: trim-video-end <input_video> <output_video> <num_seconds>"
         echo "Trims last num_seconds off of the end of the input_video and saves it to the output_video location."
     else
         INPUT_VIDEO="$1"
@@ -134,7 +135,7 @@ function trim-ig-watermark() {
 
         # the number of seconds that the ending watermark plays
         ENDING_WATERMARK_LENGTH="4"
-        trim-watermark "$1" "$2" "$ENDING_WATERMARK_LENGTH"
+        trim-video-end "$1" "$2" "$ENDING_WATERMARK_LENGTH"
     fi
 }
 
@@ -149,7 +150,7 @@ function trim-tk-watermark() {
 
         # the number of seconds that the ending watermark plays
         ENDING_WATERMARK_LENGTH="2.1"
-        trim-watermark "$1" "$2" "$ENDING_WATERMARK_LENGTH"
+        trim-video-end "$1" "$2" "$ENDING_WATERMARK_LENGTH"
     fi
 }
 
