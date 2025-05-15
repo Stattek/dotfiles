@@ -95,34 +95,34 @@ alias l='ls -CF'
 
 # alias for changing directories with sk
 # REQUIRES `sk` TO BE INSTALLED
-function cdfzf(){
-    TEMP_DIR=`fzf`
+function cdfzf() {
+    TEMP_DIR=$(fzf)
     if [ "$TEMP_DIR" = "" ]; then
-        return 1;
+        return 1
     fi
-    if [ -d  $TEMP_DIR ]; then
+    if [ -d $TEMP_DIR ]; then
         # we have a directory, so go there
-        cd "$TEMP_DIR";
+        cd "$TEMP_DIR"
     else
         # removes the last token from the string to get the parent directory of the file
-        cd `echo "$TEMP_DIR" | rev | cut -d "/" -f2- | rev`;
+        cd $(echo "$TEMP_DIR" | rev | cut -d "/" -f2- | rev)
     fi
 }
 alias cdfzf='cd $(fzf | sed "s|\(.*\)/.*|\1|")'
 
 # alias for cdfzf which is faster to type
 # REQUIRE `fzf` TO BE INSTALLED
-function cdsk (){
-    TEMP_DIR=`sk`
+function cdsk() {
+    TEMP_DIR=$(sk)
     if [ "$TEMP_DIR" = "" ]; then
-        return 1;
+        return 1
     fi
-    if [ -d  $TEMP_DIR ]; then
+    if [ -d $TEMP_DIR ]; then
         # we have a directory, so go there
-        cd "$TEMP_DIR";
+        cd "$TEMP_DIR"
     else
         # removes the last token from the string to get the parent directory of the file
-        cd `echo "$TEMP_DIR" | rev | cut -d "/" -f2- | rev`;
+        cd $(echo "$TEMP_DIR" | rev | cut -d "/" -f2- | rev)
     fi
 }
 
@@ -180,6 +180,12 @@ function trim-tk-watermark() {
 }
 
 # --- END OF MY ALIASES ---
+
+# --- MY EXPORTS ---
+export CCACHE_DIR=/home/stattek/.ccache
+export CCACHE_TEMPDIR=/home/stattek/.ccache
+export PATH="/usr/lib/ccache:$PATH"
+# --- END OF MY EXPORTS ---
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
