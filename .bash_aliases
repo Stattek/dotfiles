@@ -7,7 +7,7 @@ function cdfzf() {
     if [ "$TEMP_DIR" = "" ]; then
         return 1
     fi
-    if [ -d $TEMP_DIR ]; then
+    if [ -d "$TEMP_DIR" ]; then
         # we have a directory, so go there
         cd "$TEMP_DIR"
     else
@@ -24,7 +24,7 @@ function cdsk() {
     if [ "$TEMP_DIR" = "" ]; then
         return 1
     fi
-    if [ -d $TEMP_DIR ]; then
+    if [ -d "$TEMP_DIR" ]; then
         # we have a directory, so go there
         cd "$TEMP_DIR"
     else
