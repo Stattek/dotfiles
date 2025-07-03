@@ -15,8 +15,7 @@ for file in $GATHER_DOTFILES_LIST; do
     if [[ "${OUTPUT_FILE:0:1}" = "~" ]]; then
         OUTPUT_FILE=`echo "$OUTPUT_FILE" | sed "0,/\//{s/\~\///}"`
         # since files wrapped with quotes them can't find home
-        file=`echo "$OUTPUT_FILE"`
-        file=`echo "$HOME/$file"`
+        file=`echo "$HOME/$OUTPUT_FILE"`
     fi
 
     # handle files that are absolute paths
