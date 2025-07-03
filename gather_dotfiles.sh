@@ -8,10 +8,7 @@ GATHER_DOTFILES_LIST="
 /usr/local/bin/backup_folder
 "
 
-echo "DOTFILES=$GATHER_DOTFILES_LIST"
-
 for file in $GATHER_DOTFILES_LIST; do
-    echo "file=$file"
     OUTPUT_FILE="$file"
 
     # handle files that are home paths
@@ -32,11 +29,8 @@ for file in $GATHER_DOTFILES_LIST; do
 
     # check that the output file is meant to be in a subdirectory
     echo "$OUTPUT_FILE" | grep "/" > /dev/null && mkdir -p "$OUTPUT_FILE_DIR"
-    echo "OUTPUT_FILE_DIR= $OUTPUT_FILE_DIR"
-    echo "OUTPUT_FILE= $OUTPUT_FILE"
-    echo "cp $file $OUTPUT_FILE"
-    ls "$file"
+    echo "Copying '$file' to '$OUTPUT_FILE'..."
     cp "$file" "$OUTPUT_FILE"
-    cp ~/.bashrc .bashrc
 done
 
+echo "### Gathering complete"
