@@ -49,7 +49,7 @@ BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: AfterColon
 BreakInheritanceList: AfterColon
 BreakStringLiterals: true
-ColumnLimit: 110
+ColumnLimit: 90
 CompactNamespaces: false
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 ContinuationIndentWidth: 4
