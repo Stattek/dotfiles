@@ -5,6 +5,7 @@ GATHER_DOTFILES_LIST="
 ~/.bash_aliases
 ~/.clang-format
 ~/.config/kitty/kitty.conf
+~/.config/lazygit/config.yml
 /usr/local/bin/backup_folder
 "
 
