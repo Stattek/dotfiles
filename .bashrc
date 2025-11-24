@@ -1,4 +1,5 @@
 #
+# My Arch bashrc.
 # ~/.bashrc
 #
 
