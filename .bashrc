@@ -14,11 +14,14 @@ alias pacman='pacman --color=auto'
 PS1='\[\e[01;35m\]\u@\h\[\e[m\]\n\[\e[01;34m\]\w\[\e[m\] \$ '
 . "$HOME/.cargo/env"
 
+# runs before each prompt
 function prompt_command() {
     local exit_code=$?
     if [[ $exit_code -eq 0 ]]; then
+        # normal username
         PS1='\[\e[01;35m\]\u@\h\[\e[m\]\n\[\e[01;34m\]\w\[\e[m\] \$ '
     else
+        # last command gave an error, show red username
         PS1='\[\e[01;31m\]\u@\h\[\e[m\]\n\[\e[01;34m\]\w\[\e[m\] \$ '
     fi
 }
