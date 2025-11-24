@@ -11,8 +11,18 @@ alias lh='ls -hl'
 
 alias grep='grep --color=auto'
 alias pacman='pacman --color=auto'
-PS1='\[\e[32m\]\u@\h\[\e[m\]\n\[\e[34m\]\w\[\e[m\] \$ '
+PS1='\[\e[01;35m\]\u@\h\[\e[m\]\n\[\e[01;34m\]\w\[\e[m\] \$ '
 . "$HOME/.cargo/env"
+
+function prompt_command() {
+    local exit_code=$?
+    if [[ $exit_code -eq 0 ]]; then
+        PS1='\[\e[01;35m\]\u@\h\[\e[m\]\n\[\e[01;34m\]\w\[\e[m\] \$ '
+    else
+        PS1='\[\e[01;31m\]\u@\h\[\e[m\]\n\[\e[01;34m\]\w\[\e[m\] \$ '
+    fi
+}
+PROMPT_COMMAND=prompt_command
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
