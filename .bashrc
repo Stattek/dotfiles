@@ -17,6 +17,7 @@ PS1='\[\e[01;35m\]\u@\h\[\e[m\]\n\[\e[01;34m\]\w\[\e[m\] \$ '
 
 # runs before each prompt
 function prompt_command() {
+    # NOTE: don't run any commands before this
     local exit_code=$?
     if [[ $exit_code -eq 0 ]]; then
         # normal username
