@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Helper program that is a wrapper around rsync. Includes the sync step for removable media that
+# might not write immediately. This script is intended to be more secure and convenient for 
+# backing up from one local drive to another.
 
 # do test by default
 DO_TEST_PUSH=true
