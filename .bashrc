@@ -53,6 +53,8 @@ function prompt_command() {
         # last command gave an error, show red username
         PS1='\[\e[01;31m\]\u@\h\[\e[m\]\n\[\e[01;34m\]\w\[\e[m\] \$ '
     fi
+    # immediately write to history file
+    history -a
 }
 PROMPT_COMMAND=prompt_command
 
