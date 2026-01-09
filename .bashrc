@@ -49,12 +49,25 @@ alias alert='notify-send --urgency=normal -i "$([ $? = 0 ] && echo terminal || e
 function prompt_command() {
     # NOTE: don't run any commands before this
     local exit_code=$?
+
+    # get the git branch
+    local the_branch;
+    # NOTE: for some reason, declaring and setting a local variable in the same statement doesn't save the exit code in `$?`,
+    # so I just declare the variable and then set it later to get around this.
+    the_branch=`git branch --no-color --show-current 2>&1`
+    local git_return_code=$?
+    if [[ $git_return_code -eq 0 ]]; then
+        PS1_GIT_BRANCH="${the_branch}"
+    else
+        PS1_GIT_BRANCH=""
+    fi
+
     if [[ $exit_code -eq 0 ]]; then
         # normal username
-        PS1='\[\e[01;35m\]\u@\h\[\e[m\]\n\[\e[01;34m\]\w\[\e[m\] \$ '
+        PS1="\[\e[01;35m\]\u@\h\[\e[m\] \e[01;33m\][${PS1_GIT_BRANCH}]\[\e[m\]\n\[\e[01;34m\]\w\[\e[m\] \$ "
     else
         # last command gave an error, show red username
-        PS1='\[\e[01;31m\]\u@\h\[\e[m\]\n\[\e[01;34m\]\w\[\e[m\] \$ '
+        PS1="\[\e[01;31m\]\u@\h\[\e[m\] \e[01;33m\][${PS1_GIT_BRANCH}]\[\e[m\]\n\[\e[01;34m\]\w\[\e[m\] \$ "
     fi
     # immediately write to history file
     history -a
