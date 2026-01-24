@@ -1,78 +1,122 @@
 #!/usr/bin/env bash
+# Helper program that is a wrapper around rsync. Includes the sync step for removable media that
+# might not write immediately. This script is intended to be more secure and convenient for 
+# backing up from one local drive to another.
 
 # do test by default
-TEST_PUSH=true
+DO_TEST_PUSH=true
+# by default, only adds new files from src->dest. Does not delete any files that exist in dest but not src.
+DO_UPDATE=true
 
-while getopts 'pt' OPTION; do
+# print the usage of the program
+function print_usage(){
+    echo "Usage: $(basename $0) <src_directory> <dest_directory>"
+    echo "    Securely backs up a source directory to a destination directory, doing a test by default (does not change files unless specifically given the flag to do so)."
+    echo "FLAGS:"
+    echo "    [-p|--push] # Perform push (CHANGES FILES). Cancels out --test."
+    echo "    [-t|--test] # (BY DEFAULT) Test push (does not change any files). Cancels out --push."
+    echo "    [-u|--update] # (BY DEFAULT) Only adds new files to the destination directory. Extraneous files that exist in the destination directory but not in the source directory will not be deleted. Cancels out --delete."
+    echo "    [-d|--delete] # Deletes extraneous files that exist in the destination directory but not in the source directory. Cancels out --update."
+}
 
-    case "$OPTION" in
-    p)
-        TEST_PUSH=false
+# grab all of the options
+PARSED_OPTS=`getopt -l "push,test,update,delete,help" -o "ptudh" -- $@`
+# sets the program's arguments to the parsed options
+eval set -- "$PARSED_OPTS"
+
+while true; do
+    case "$1" in
+    -p|--push)
+        DO_TEST_PUSH=false
         shift 1
         ;;
-
-    t)
-        TEST_PUSH=true
+    -t|--test)
+        DO_TEST_PUSH=true
         shift 1
         ;;
-
-    ?)
-        echo "Usage: $(basename $0) <src_directory> <dest_directory>"
-        echo "    Securely backs up a source directory to a destination directory, doing a test by default (does not change files unless specifically given the flag to do so)."
-        echo "FLAGS:"
-        echo "    [-p] # Perform push (CHANGES FILES)"
-        echo "    [-t] # (BY DEFAULT) Test push (does not change any files)"
+    -u|--update)
+        DO_UPDATE=true
+        shift 1
+        ;;
+    -d|--delete)
+        DO_UPDATE=false
+        shift 1
+        ;;
+    # end of opts
+    --)
+        shift 1
+        break
+        ;;
+    # help or unknown arg
+    -h|--help|*)
+        print_usage
         exit 1
         ;;
     esac
 done
 
 if [ "$#" -lt 2 ]; then
-    echo "Usage: $(basename $0) <src_directory> <dest_directory>"
-    echo "    Securely backs up a source directory to a destination directory, doing a test by default (does not change files unless specifically given the flag to do so)."
-    echo "FLAGS:"
-    echo "    [-p] # Perform push (CHANGES FILES)"
-    echo "    [-t] # (BY DEFAULT) Test push (does not change any files)"
+    printf "Error: Missing <src_directory> or <dest_directory>\n\n"
+    print_usage
     exit 1
 fi
 
 SRC_DIRECTORY="$1"
 DEST_DIRECTORY="$2"
 
+# defines for the backup command and its arguments
+BACKUP_CMD=rsync
+# should always use these arguments
+COMMON_ARGS="-raz --progress"
+# specific argument defines
+DRY_RUN_ARG=--dry-run
+UPDATE_ARG=--update
+DELETE_ARG=--delete
+
+# Check that the source and destination exist. This is meant to be a backup program.
 if [ ! -d "$SRC_DIRECTORY" ]; then
     echo "source directory: $SRC_DIRECTORY does not exist!"
     exit 1
 fi
-
 if [ ! -d "$DEST_DIRECTORY" ]; then
     echo "source directory: $DEST_DIRECTORY does not exist!"
     exit 1
 fi
 
-if $TEST_PUSH; then
+# let's build up our final arguments
+CHOSEN_ARGUMENTS=""
+if $DO_UPDATE; then
+    # syncs files to their newest versions if they exist
+    # and creates files if they did not exist before
+    CHOSEN_ARGUMENTS="$CHOSEN_ARGUMENTS $UPDATE_ARG"
+else
+    # deletes files that exist in the destination but not the source
+    CHOSEN_ARGUMENTS="$CHOSEN_ARGUMENTS $DELETE_ARG"
+fi
+
+# NOTE: Keep in mind this block checks if the user wants to actually perform this action and prints to console.
+# This should be the last argument checked before running the backup command.
+if $DO_TEST_PUSH; then
+    # test push
+    CHOSEN_ARGUMENTS="$CHOSEN_ARGUMENTS $DRY_RUN_ARG"
     echo "---Performing test from $SRC_DIRECTORY directory to $DEST_DIRECTORY---"
-    # perform test push
-    rsync -raz --dry-run --update --progress "$SRC_DIRECTORY" "$DEST_DIRECTORY"
 else
     # prompt the user if they are sure that they want to do this action
-    echo "---backup $SRC_DIRECTORY directory to $DEST_DIRECTORY---"
-    echo "(does not delete any files, only updates when there are changes and creates new ones if they do not exist)"
-    echo
+    echo "---backup \`$SRC_DIRECTORY\` directory to \`$DEST_DIRECTORY\`---"
     read -p "Are you sure (y/n)? " -n 1 -r
-    # newlines
-    echo
-    echo
+    printf "\n\n"
 
     # if we got a yes reply, then do the push
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo "---Performing push---"
-        # syncs files to their newest versions if they exist
-        # and creates files if they did not exist before
-        # NOTE: --update prevents rsync from deleting files that were deleted, so things can only be added
-        # WARNING: could cause issues, so add --dry-run to see if there are errors beforehand
-        rsync -raz --update --progress "$SRC_DIRECTORY" "$DEST_DIRECTORY"
+    else
+        # user does not want to perform the push
+        exit 1
     fi
 fi
+
+# now perform the backup
+$BACKUP_CMD $COMMON_ARGS $CHOSEN_ARGUMENTS "$SRC_DIRECTORY" "$DEST_DIRECTORY"
 
 # make sure that it is actually done
 # NOTE: VERY IMPORTANT, THIS PREVENTS DATA FROM BEING LOST WHEN BACKING UP TO SLOW DRIVES (such as flash drives)
@@ -81,7 +125,9 @@ fi
 cd "$DEST_DIRECTORY"
 
 echo "syncing..."
+# run sync in the background
 sync &
+# get the process ID
 pid=$!
 
 # If this script is killed, kill the `sync'.
