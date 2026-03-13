@@ -39,7 +39,7 @@ alias pacman='pacman --color=auto'
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # my default PS1
-PS1='\[\e[01;35m\]\u@\h\[\e[m\]\n\[\e[01;34m\]\w\[\e[m\] \$ '
+PS1='\[\e[01;35m\]\u@\h\[\e[m\]: \[\e[01;34m\]\w\[\e[m\]\n\$ '
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -54,21 +54,18 @@ function prompt_command() {
     local the_branch;
     # NOTE: for some reason, declaring and setting a local variable in the same statement doesn't save the exit code in `$?`,
     # so I just declare the variable and then set it later to get around this.
-    the_branch=`git branch --no-color --show-current 2>&1`
-    local git_return_code=$?
-    if [[ $git_return_code -eq 0 ]]; then
-        PS1_GIT_BRANCH="${the_branch}"
-    else
-        PS1_GIT_BRANCH=""
-    fi
+    PS1_GIT_BRANCH=$(git branch --no-color --show-current 2>/dev/null)
 
+    # set the exit code color for the username
     if [[ $exit_code -eq 0 ]]; then
         # normal username
-        PS1="\[\e[01;35m\]\u@\h\[\e[m\] \e[01;33m\][${PS1_GIT_BRANCH}]\[\e[m\]\n\[\e[01;34m\]\w\[\e[m\] \$ "
+        PS1_EXIT_CODE_COLOR="35"
     else
         # last command gave an error, show red username
-        PS1="\[\e[01;31m\]\u@\h\[\e[m\] \e[01;33m\][${PS1_GIT_BRANCH}]\[\e[m\]\n\[\e[01;34m\]\w\[\e[m\] \$ "
+        PS1_EXIT_CODE_COLOR="31"
     fi
+
+    PS1="\[\e[01;${PS1_EXIT_CODE_COLOR}m\]\u@\h\[\e[m\] \e[01;33m\][${PS1_GIT_BRANCH}]\[\e[m\]: \[\e[01;34m\]\w\[\e[m\]\n\$ "
     # immediately write to history file
     history -a
 }

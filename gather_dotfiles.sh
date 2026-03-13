@@ -8,6 +8,7 @@ GATHER_DOTFILES_LIST="
 ~/.config/lazygit/config.yml
 ~/.config/rmpc/config.ron
 ~/.config/rmpc/themes/moondred.ron
+~/.config/ghostty/config
 /usr/local/bin/backup_folder
 "
 
