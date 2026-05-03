@@ -1,6 +1,7 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
+# TODO: The changes that were made to this file need to be reviewed and fixed. There are some issues from merging the arch branch
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
@@ -34,6 +35,7 @@ shopt -s checkwinsize
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
+
 # my aliases
 alias ls='ls --color=auto'
 alias la='ls -A'
@@ -107,6 +109,8 @@ PS1='\[\e[01;35m\]\u@\h\[\e[m\]: \[\e[01;34m\]\w\[\e[m\]\n\$ '
 #   sleep 10; alert
 alias alert='notify-send --urgency=normal -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
+# TODO: edit this prompt command to use the debian PS1
+
 # runs before each prompt
 function prompt_command() {
     # NOTE: don't run any commands before this
@@ -132,6 +136,8 @@ function prompt_command() {
     history -a
 }
 PROMPT_COMMAND=prompt_command
+
+# TODO: remove the prompt command below. This is the old one.
 
 # runs before each prompt
 function prompt_command() {
