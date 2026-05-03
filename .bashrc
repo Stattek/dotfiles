@@ -3,10 +3,7 @@
 # for examples
 
 # If not running interactively, don't do anything
-case $- in
-*i*) ;;
-*) return ;;
-esac
+[[ $- != *i* ]] && return
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -37,6 +34,10 @@ shopt -s checkwinsize
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
+# my aliases
+alias ls='ls --color=auto'
+alias la='ls -A'
+alias lh='ls -hl'
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
@@ -87,7 +88,7 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 # colored GCC warnings and errors
-#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # some more ls aliases
 alias ll='ls -alFh'
@@ -99,10 +100,38 @@ export CCACHE_DIR=/home/stattek/.ccache
 export CCACHE_TEMPDIR=/home/stattek/.ccache
 export PATH="/usr/lib/ccache:$PATH"
 # --- END OF MY EXPORTS ---
+# my default PS1
+PS1='\[\e[01;35m\]\u@\h\[\e[m\]: \[\e[01;34m\]\w\[\e[m\]\n\$ '
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+alias alert='notify-send --urgency=normal -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+# runs before each prompt
+function prompt_command() {
+    # NOTE: don't run any commands before this
+    local exit_code=$?
+
+    # get the git branch
+    local the_branch;
+    # NOTE: for some reason, declaring and setting a local variable in the same statement doesn't save the exit code in `$?`,
+    # so I just declare the variable and then set it later to get around this.
+    PS1_GIT_BRANCH=$(git branch --no-color --show-current 2>/dev/null)
+
+    # set the exit code color for the username
+    if [[ $exit_code -eq 0 ]]; then
+        # normal username
+        PS1_EXIT_CODE_COLOR="35"
+    else
+        # last command gave an error, show red username
+        PS1_EXIT_CODE_COLOR="31"
+    fi
+
+    PS1="\[\e[01;${PS1_EXIT_CODE_COLOR}m\]\u@\h\[\e[m\] \e[01;33m\][${PS1_GIT_BRANCH}]\[\e[m\]: \[\e[01;34m\]\w\[\e[m\]\n\$ "
+    # immediately write to history file
+    history -a
+}
+PROMPT_COMMAND=prompt_command
 
 # runs before each prompt
 function prompt_command() {
