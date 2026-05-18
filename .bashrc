@@ -51,9 +51,6 @@ function prompt_command() {
     local exit_code=$?
 
     # get the git branch
-    local the_branch;
-    # NOTE: for some reason, declaring and setting a local variable in the same statement doesn't save the exit code in `$?`,
-    # so I just declare the variable and then set it later to get around this.
     PS1_GIT_BRANCH=$(git branch --no-color --show-current 2>/dev/null)
 
     # set the exit code color for the username
