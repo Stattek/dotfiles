@@ -1,7 +1,6 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
-# TODO: The changes that were made to this file need to be reviewed and fixed. There are some issues from merging the arch branch
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
@@ -63,7 +62,7 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]\n\[\033[01;34m\]\w\[\033[00m\] \$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]: \[\033[01;34m\]\w\[\033[00m\]\n\$ '
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h\n\w \$ '
 fi
@@ -102,14 +101,10 @@ export CCACHE_DIR=/home/stattek/.ccache
 export CCACHE_TEMPDIR=/home/stattek/.ccache
 export PATH="/usr/lib/ccache:$PATH"
 # --- END OF MY EXPORTS ---
-# my default PS1
-PS1='\[\e[01;35m\]\u@\h\[\e[m\]: \[\e[01;34m\]\w\[\e[m\]\n\$ '
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
-alias alert='notify-send --urgency=normal -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
-# TODO: edit this prompt command to use the debian PS1
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # runs before each prompt
 function prompt_command() {
@@ -117,9 +112,6 @@ function prompt_command() {
     local exit_code=$?
 
     # get the git branch
-    local the_branch;
-    # NOTE: for some reason, declaring and setting a local variable in the same statement doesn't save the exit code in `$?`,
-    # so I just declare the variable and then set it later to get around this.
     PS1_GIT_BRANCH=$(git branch --no-color --show-current 2>/dev/null)
 
     # set the exit code color for the username
@@ -131,25 +123,9 @@ function prompt_command() {
         PS1_EXIT_CODE_COLOR="31"
     fi
 
-    PS1="\[\e[01;${PS1_EXIT_CODE_COLOR}m\]\u@\h\[\e[m\] \e[01;33m\][${PS1_GIT_BRANCH}]\[\e[m\]: \[\e[01;34m\]\w\[\e[m\]\n\$ "
+    PS1="${debian_chroot:+($debian_chroot)}\[\033[01;${PS1_EXIT_CODE_COLOR}m\]\u@\h\[\033[00m\] \e[01;33m\][${PS1_GIT_BRANCH}]\[\e[m\]: \[\033[01;34m\]\w\[\033[00m\]\n\$ "
     # immediately write to history file
     history -a
-}
-PROMPT_COMMAND=prompt_command
-
-# TODO: remove the prompt command below. This is the old one.
-
-# runs before each prompt
-function prompt_command() {
-    # NOTE: don't run any commands before this
-    local exit_code=$?
-    if [[ $exit_code -eq 0 ]]; then
-        # normal username
-        PS1='${debian_chroot:+($debian_chroot)}\[\033[01;35m\]\u@\h\[\033[00m\]\n\[\033[01;34m\]\w\[\033[00m\] \$ '
-    else
-        # last command gave an error, show red username
-        PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[00m\]\n\[\033[01;34m\]\w\[\033[00m\] \$ '
-    fi
 }
 PROMPT_COMMAND=prompt_command
 
