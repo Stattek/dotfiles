@@ -68,6 +68,29 @@ function prompt_command() {
 }
 PROMPT_COMMAND=prompt_command
 
+# runs before each prompt
+function prompt_command() {
+    # NOTE: don't run any commands before this
+    local exit_code=$?
+
+    # get the git branch
+    PS1_GIT_BRANCH=$(git branch --no-color --show-current 2>/dev/null)
+
+    # set the exit code color for the username
+    if [[ $exit_code -eq 0 ]]; then
+        # normal username
+        PS1_EXIT_CODE_COLOR="35"
+    else
+        # last command gave an error, show red username
+        PS1_EXIT_CODE_COLOR="31"
+    fi
+
+    PS1="${debian_chroot:+($debian_chroot)}\[\033[01;${PS1_EXIT_CODE_COLOR}m\]\u@\h\[\033[00m\] \e[01;33m\][${PS1_GIT_BRANCH}]\[\e[m\]: \[\033[01;34m\]\w\[\033[00m\]\n\$ "
+    # immediately write to history file
+    history -a
+}
+PROMPT_COMMAND=prompt_command
+
 # Alias definitions.
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.

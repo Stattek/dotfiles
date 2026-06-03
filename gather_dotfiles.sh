@@ -4,6 +4,7 @@ GATHER_DOTFILES_LIST="
 ~/.bashrc
 ~/.bash_aliases
 ~/.clang-format
+~/.clangd
 ~/.config/kitty/kitty.conf
 ~/.config/lazygit/config.yml
 ~/.config/rmpc/config.ron

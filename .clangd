@@ -1,0 +1,9 @@
+InlayHints:
+  ParameterNames: true
+  BlockEnd: true
+  DeducedTypes: true
+  DefaultArguments: true
+Completion:
+  HeaderInsertion: IWYU # use "Never" if this gets annoying
+  CodePatterns: All
+  MacroFilter: FuzzyMatch
