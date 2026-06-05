@@ -91,6 +91,12 @@ fi
 # colored GCC warnings and errors
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
+# export my default editor (vim).
+# This makes many programs use this as the default text editor, such as
+# when you want to edit a command in bash by pressing `v` in normal mode
+# (with vi keybindings). By default, it tries to open `vi` which I don't use.
+export EDITOR="vim"
+
 # some more ls aliases
 alias ll='ls -alFh'
 alias la='ls -A'
