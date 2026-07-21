@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+# set so script fails if a program fails or anything
+# in a pipeline fails
+set -eE
+
+if [[ "$#" -ne 2 ]]; then
+    # print help
+    echo "${0} <input_path> <output_path>"
+    echo ""
+    echo "    Converts a video to gif in a more efficient way"
+    echo "    than using 'ffmpeg -i video.mp4 video.gif'"
+    echo ""
+    echo "    This is a convenience script that utilizes ffmpeg and"
+    echo "    gifski to do simple conversion from video to GIF. If"
+    echo "    you need to do anything more complicated, don't use this"
+    echo "    script."
+    echo ""
+    echo "    Example usage: ${0} my_video.mp4 my_gif.gif"
+    exit 1
+fi
+
+# Finds if a program exists on the system. If it doesn't, fails
+# the test script.
+# Usage: find_program <program_name>
+find_program() {
+    echo "$#"
+    echo "$@"
+    which "${1}" 2>&1 > /dev/null || (echo "Failed to find ${1}. Please install it on your system." && exit 1)
+}
+
+find_program gifski
+find_program ffmpeg
+
+# If you want to do anything more complicated, don't use this tool.
+# It's mostly a convenience script.
+ffmpeg -i "${1}" -f yuv4mpegpipe - | gifski -o "${2}" -
