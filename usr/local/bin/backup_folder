@@ -3,6 +3,8 @@
 # might not write immediately. This script is intended to be more secure and convenient for 
 # backing up from one local drive to another.
 
+set -eE
+
 # do test by default
 DO_TEST_PUSH=true
 # by default, only adds new files from src->dest. Does not delete any files that exist in dest but not src.
@@ -10,7 +12,7 @@ DO_UPDATE=true
 
 # print the usage of the program
 function print_usage(){
-    echo "Usage: $(basename $0) <src_directory> <dest_directory>"
+    echo "Usage: $(basename "$0") <src_directory> <dest_directory>"
     echo "    Securely backs up a source directory to a destination directory, doing a test by default (does not change files unless specifically given the flag to do so)."
     echo "FLAGS:"
     echo "    [-p|--push] # Perform push (CHANGES FILES). Cancels out --test."
@@ -20,7 +22,7 @@ function print_usage(){
 }
 
 # grab all of the options
-PARSED_OPTS=`getopt -l "push,test,update,delete,help" -o "ptudh" -- $@`
+PARSED_OPTS=$(getopt -l "push,test,update,delete,help" -o "ptudh" -- "$@")
 # sets the program's arguments to the parsed options
 eval set -- "$PARSED_OPTS"
 
@@ -116,7 +118,7 @@ else
 fi
 
 # now perform the backup
-$BACKUP_CMD $COMMON_ARGS $CHOSEN_ARGUMENTS "$SRC_DIRECTORY" "$DEST_DIRECTORY"
+"$BACKUP_CMD" "$COMMON_ARGS" "$CHOSEN_ARGUMENTS" "$SRC_DIRECTORY" "$DEST_DIRECTORY"
 
 # make sure that it is actually done
 # NOTE: VERY IMPORTANT, THIS PREVENTS DATA FROM BEING LOST WHEN BACKING UP TO SLOW DRIVES (such as flash drives)
@@ -131,7 +133,7 @@ sync &
 pid=$!
 
 # If this script is killed, kill the `sync'.
-trap "kill $pid 2>/dev/null" EXIT
+trap 'kill "$pid" 2>/dev/null' EXIT
 
 # spinner strings
 spin[0]="-"
