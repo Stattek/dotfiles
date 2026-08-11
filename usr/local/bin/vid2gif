@@ -24,8 +24,6 @@ fi
 # the test script.
 # Usage: find_program <program_name>
 find_program() {
-    echo "$#"
-    echo "$@"
     (which "${1}" 2>&1) > /dev/null || (echo "Failed to find ${1}. Please install it on your system." && exit 1)
 }
 
