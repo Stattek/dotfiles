@@ -18,18 +18,17 @@ for file in $GATHER_DOTFILES_LIST; do
 
     # handle files that are home paths
     if [[ "${OUTPUT_FILE:0:1}" = "~" ]]; then
-        OUTPUT_FILE=`echo "$OUTPUT_FILE" | sed "0,/\//{s/\~\///}"`
-        # since files wrapped with quotes them can't find home
-        file=`echo "$HOME/$OUTPUT_FILE"`
+        OUTPUT_FILE=$(echo "$OUTPUT_FILE" | sed "0,/\//{s/\~\///}")
+        file="$HOME/$OUTPUT_FILE"
     fi
 
     # handle files that are absolute paths
     if [[ "${OUTPUT_FILE:0:1}" = "/" ]]; then
-        OUTPUT_FILE=`echo "$OUTPUT_FILE" | sed "0,/\//{s/\///}"`
+        OUTPUT_FILE=$(echo "$OUTPUT_FILE" | sed "0,/\//{s/\///}")
     fi
 
     # if it is in a subdirectory, we need to handle that
-    OUTPUT_FILE_DIR=`echo "$OUTPUT_FILE" | rev | cut -d "/" -f2- | rev`
+    OUTPUT_FILE_DIR=$(echo "$OUTPUT_FILE" | rev | cut -d "/" -f2- | rev)
 
     # check that the output file is meant to be in a subdirectory
     echo "$OUTPUT_FILE" | grep "/" > /dev/null && mkdir -p "$OUTPUT_FILE_DIR"

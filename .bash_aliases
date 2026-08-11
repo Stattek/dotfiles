@@ -9,10 +9,10 @@ function cdfzf() {
     fi
     if [ -d "$TEMP_DIR" ]; then
         # we have a directory, so go there
-        cd "$TEMP_DIR"
+        cd "$TEMP_DIR" || return 1
     else
         # removes the last token from the string to get the parent directory of the file
-        cd $(echo "$TEMP_DIR" | rev | cut -d "/" -f2- | rev)
+        cd "$(echo "$TEMP_DIR" | rev | cut -d "/" -f2- | rev)" || return 1
     fi
 }
 alias cdfzf='cd $(fzf | sed "s|\(.*\)/.*|\1|")'
@@ -26,10 +26,10 @@ function cdsk() {
     fi
     if [ -d "$TEMP_DIR" ]; then
         # we have a directory, so go there
-        cd "$TEMP_DIR"
+        cd "$TEMP_DIR" || return 1
     else
         # removes the last token from the string to get the parent directory of the file
-        cd $(echo "$TEMP_DIR" | rev | cut -d "/" -f2- | rev)
+        cd "$(echo "$TEMP_DIR" | rev | cut -d "/" -f2- | rev)" || return 1
     fi
 }
 
