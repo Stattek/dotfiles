@@ -57,25 +57,31 @@
             prop: (kind: Property(Artist), style: (fg: "#fc6f6f"),
                 default: (kind: Text("<<Unknown>>"), style: (fg: "#fc6f6f"))
             ),
-            width: "20%",
+            width: "15%",
         ),
         (
             prop: (kind: Property(Title), style: (fg: "#dab8fc"),
                 default: (kind: Text("<<Unknown>>"), style: (fg: "#dab8fc"))
             ),
-            width: "35%",
+            width: "30%",
         ),
         (
             prop: (kind: Property(Album), style: (fg: "#7e80fc"),
                 default: (kind: Text("<<Unknown Album>>"), style: (fg: "#7e80fc"))
             ),
-            width: "30%",
+            width: "25%",
+        ),
+        (
+            prop: (kind: Property(Filename), style: (fg: "#dab8fc"),
+                default: (kind: Text("<<Unknown Filename>>"), style: (fg: "#dab8fc"))
+            ),
+            width: "25%",
         ),
         (
             prop: (kind: Property(Duration), style: (fg: "#dab8fc"),
                 default: (kind: Text("-"), style: (fg: "#dab8fc"))
             ),
-            width: "15%",
+            width: "5%",
             alignment: Right,
         ),
     ],
@@ -111,7 +117,7 @@
                 ],
                 center: [
                     (kind: Property(Song(Title)), style: (fg: "#dab8fc", modifiers: "Bold"),
-                        default: (kind: Text("No Song"), style: (fg: "#dab8fc", modifiers: "Bold"))
+                        default: (kind: Text("<<No Song>>"), style: (fg: "#dab8fc", modifiers: "Bold"))
                     )
                 ],
                 right: [
@@ -130,11 +136,11 @@
                 ],
                 center: [
                     (kind: Property(Song(Artist)), style: (fg: "#fc6f6f", modifiers: "Bold"),
-                        default: (kind: Text("Unknown"), style: (fg: "#fc6f6f", modifiers: "Bold"))
+                        default: (kind: Text("<<Unknown>>"), style: (fg: "#fc6f6f", modifiers: "Bold"))
                     ),
                     (kind: Text(" - "), style: (fg: "#dab8fc")),
                     (kind: Property(Song(Album)), style: (fg: "#7e80fc"),
-                        default: (kind: Text("Unknown Album"), style: (fg: "#7e80fc"))
+                        default: (kind: Text("<<Unknown Album>>"), style: (fg: "#7e80fc"))
                     )
                 ],
                 right: [
