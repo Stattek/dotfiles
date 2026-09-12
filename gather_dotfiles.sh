@@ -10,6 +10,7 @@ GATHER_DOTFILES_LIST="
 ~/.config/rmpc/config.ron
 ~/.config/rmpc/themes/moondred.ron
 ~/.config/ghostty/config
+~/.config/mpd/mpd.conf
 /usr/local/bin/backup_folder
 "
 
