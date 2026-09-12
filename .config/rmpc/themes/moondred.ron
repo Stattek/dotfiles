@@ -69,19 +69,19 @@
             prop: (kind: Property(Album), style: (fg: "#7e80fc"),
                 default: (kind: Text("<<Unknown Album>>"), style: (fg: "#7e80fc"))
             ),
-            width: "25%",
+            width: "30%",
         ),
         (
             prop: (kind: Property(Filename), style: (fg: "#dab8fc"),
                 default: (kind: Text("<<Unknown Filename>>"), style: (fg: "#dab8fc"))
             ),
-            width: "25%",
+            width: "15%",
         ),
         (
             prop: (kind: Property(Duration), style: (fg: "#dab8fc"),
                 default: (kind: Text("-"), style: (fg: "#dab8fc"))
             ),
-            width: "5%",
+            width: "10%",
             alignment: Right,
         ),
     ],
