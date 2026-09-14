@@ -86,5 +86,35 @@ function trim-tk-watermark() {
     fi
 }
 
+# prints how long until a certain time.
+time-until() {
+    if [ "$#" -ne "1" ]; then
+        echo "Usage: time-until <date_command_time>"
+        echo
+        echo "    This command is a thin wrapper around using date and"
+        echo "    prints the hours and minutes until the date provided."
+        echo
+        echo "Examples:"
+        echo '    time-until "tomorrow 7:20"'
+        echo "         - This prints the time until tomorrow at 7:20 A.M."
+        echo '    time-until "22:00"'
+        echo "         - This prints the time until today at 10:00 P.M."
+        return 1
+    fi
+
+    # get the total amount of seconds until the specified date
+    local total_seconds_until=$(( $(date -d "$1" +%s) - $(date +%s) ))
+
+    local seconds_in_hour=3600
+    local hours_until=$((total_seconds_until / seconds_in_hour))
+    local remaining_seconds=$((total_seconds_until % seconds_in_hour))
+    local minutes_until=$((remaining_seconds / 60))
+    local seconds_until=$((remaining_seconds % 60))
+
+    # TODO: this kinda works with negatives, but they'll each be displayed
+    # with a negative before the number, like "-43:-57:-20". It is correct,
+    # but just displayed weird.
+    printf "%02d:%02d:%02d\n" "${hours_until}" "${minutes_until}" "${seconds_until}"
+}
 # --- END OF MY ALIASES ---
 
